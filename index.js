@@ -1,27 +1,27 @@
 const express = require('express');
+const faker = require('faker')
+
 const app = express();
 const port =  3000
 
 app.get("/", (req, res) => {
     res.send("Primer servidor en express");
 })
+
 // ----- Get all products
 app.get("/products", (req, res) => {
-    res.json([
-        {
-            name: "Produc 1",
-            price: 1000
-        },
-        {
-            name: "Produc 1",
-            price: 1000
-        },
-        {
-            name: "Produc 1",
-            price: 1000
-        },
-    ]);
-})
+    const products = []
+    const { size } = req.query;
+    const limit = size || 10;
+    for (let i = 0; i < limit; i++) {
+        products.push({
+            name: faker.commerce.productName(),
+            price: parseInt(faker.price),
+            image: faker.image.imageUrl()
+        });
+    }
+    res.json(products)
+});
 
 // ---- Get a product
 app.get("/products/:id", (req, res) => {
