@@ -33,7 +33,17 @@ app.get("/products/:id", (req, res) => {
     });
 })
 
-
+// ---- Query Params
+app.get("/users", (req, res) => {
+    const { limit, offset } = req.query;
+    if ( limit && offset ){
+        res.json({
+            limit,
+            offset
+        });
+    }
+    res.send("No hay parametros");
+});
 
 app.listen(port, () => {
     console.log(`Escuchando en el puerto ${port}`)
