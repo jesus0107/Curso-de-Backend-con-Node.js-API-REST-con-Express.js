@@ -20,8 +20,13 @@ class ProductsService {
         }
     }
 
-    create(){
-
+    create(data){
+        const newProduct = {
+            id: faker.datatype.uuid(),
+            ...data
+        }
+        this.products.push(newProduct)
+        return newProduct;
     }
 
     find(){
@@ -32,12 +37,26 @@ class ProductsService {
         return this.products.find(item => item.id === id)
     }
 
-    delete() {
-
+    delete(id) {
+        const indexProduct = this.products.findIndex(item => item.id === id);
+        if (indexProduct === -1) {
+            throw new Error("Product not found;");
+        }
+        this.products.splice(indexProduct, 1);
+        return { id };
     }
 
-    update(){
-
+    update(id, changes){
+        const indexProduct = this.products.findIndex(item => item.id === id);
+        if (indexProduct === -1) {
+            throw new Error("Product not found;");
+        }
+        const productToUpdate = this.products[indexProduct]
+        this.products[indexProduct] = {
+            ...productToUpdate,
+            ...changes
+        }
+        return this.products[indexProduct];
     }
 }
 
