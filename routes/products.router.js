@@ -6,41 +6,47 @@ const router = express.Router()
 const service = new ProductsService()
 
 // ---- Get all products
-router.get("/", (req, res) => {
-    const products = service.find()
+router.get("/", async (req, res) => {
+    const products = await service.find()
     res.json(products)
 });
 
 // ---- Get a product
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
     const { id } = req.params;
-    const product = service.findOne(id);
+    const product = await service.findOne(id);
     res.json(product)
 })
 
 // ---- Create a product
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const dataBody = req.body;
-    const addProduct = service.create(dataBody)
+    const addProduct = await service.create(dataBody)
     res.status(201).json(addProduct)
 })
 
 // ---- Update product
-router.patch("/:id", (req, res) => {
-    const { id } = req.params;
-    const data = req.body;
-    const productUpdate = service.update(id, data)
-    res.json({
-        message: "Update product",
-        data: productUpdate,
-        id
-    })
+router.patch("/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = req.body;
+        const productUpdate = await service.update(id, data)
+        res.json({
+            message: "Update product",
+            data: productUpdate,
+            id
+        })
+    } catch (error) {
+        res.status(404).json({
+            message: error.message
+        })
+    }
 })
 
 // ---- Delete product
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
     const { id } = req.params;
-    const productDeleted = service.delete(id)
+    const productDeleted = await service.delete(id)
     res.json({
         message: "Delete product",
         productDeleted
